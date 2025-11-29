@@ -6,10 +6,16 @@ import { planets, type PlanetData } from '../../data/planets'
 interface SolarSystemProps {
   speedMultiplier: number
   showOrbits: boolean
+  selectedPlanet: PlanetData | null
   onSelectPlanet: (planet: PlanetData | null) => void
 }
 
-export function SolarSystem({ speedMultiplier, showOrbits, onSelectPlanet }: SolarSystemProps) {
+export function SolarSystem({
+  speedMultiplier,
+  showOrbits,
+  selectedPlanet,
+  onSelectPlanet,
+}: SolarSystemProps) {
   return (
     <group>
       <Sun />
@@ -20,6 +26,7 @@ export function SolarSystem({ speedMultiplier, showOrbits, onSelectPlanet }: Sol
             data={planet}
             speedMultiplier={speedMultiplier}
             onSelect={onSelectPlanet}
+            isSelected={selectedPlanet?.name === planet.name}
           />
         </group>
       ))}

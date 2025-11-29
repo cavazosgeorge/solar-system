@@ -3,10 +3,11 @@ import type { PlanetData } from '../../data/planets'
 
 interface PlanetInfoProps {
   planet: PlanetData
+  isLocked: boolean
   onClose: () => void
 }
 
-export function PlanetInfo({ planet, onClose }: PlanetInfoProps) {
+export function PlanetInfo({ planet, isLocked, onClose }: PlanetInfoProps) {
   return (
     <Box
       position="absolute"
@@ -17,7 +18,8 @@ export function PlanetInfo({ planet, onClose }: PlanetInfoProps) {
       p={5}
       borderRadius="lg"
       border="1px solid"
-      borderColor="whiteAlpha.300"
+      borderColor={isLocked ? planet.color : 'whiteAlpha.300'}
+      boxShadow={isLocked ? `0 0 20px ${planet.color}40` : 'none'}
       maxW="400px"
       w="90%"
     >
@@ -34,6 +36,11 @@ export function PlanetInfo({ planet, onClose }: PlanetInfoProps) {
             <Text color="white" fontWeight="bold" fontSize="xl">
               {planet.name}
             </Text>
+            {isLocked && (
+              <Text color={planet.color} fontSize="xs" fontWeight="medium">
+                TRACKING
+              </Text>
+            )}
           </HStack>
           <Button size="sm" variant="ghost" onClick={onClose} color="white">
             ✕
@@ -60,6 +67,17 @@ export function PlanetInfo({ planet, onClose }: PlanetInfoProps) {
             </Text>
           </VStack>
         </HStack>
+
+        {isLocked && (
+          <Button
+            size="sm"
+            onClick={onClose}
+            colorPalette="gray"
+            mt={2}
+          >
+            Unlock Camera
+          </Button>
+        )}
       </VStack>
     </Box>
   )

@@ -1,17 +1,18 @@
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import type { Group, Mesh } from 'three'
+import * as THREE from 'three'
 import type { PlanetData } from '../../data/planets'
 
 interface PlanetProps {
   data: PlanetData
   speedMultiplier: number
   onSelect: (planet: PlanetData) => void
+  isSelected: boolean
 }
 
-export function Planet({ data, speedMultiplier, onSelect }: PlanetProps) {
-  const groupRef = useRef<Group>(null)
-  const meshRef = useRef<Mesh>(null)
+export function Planet({ data, speedMultiplier, onSelect, isSelected }: PlanetProps) {
+  const groupRef = useRef<THREE.Group>(null)
+  const meshRef = useRef<THREE.Mesh>(null)
 
   useFrame((state) => {
     if (groupRef.current) {
@@ -38,7 +39,11 @@ export function Planet({ data, speedMultiplier, onSelect }: PlanetProps) {
         }}
       >
         <sphereGeometry args={[data.radius, 32, 32]} />
-        <meshStandardMaterial color={data.color} />
+        <meshStandardMaterial
+          color={data.color}
+          emissive={isSelected ? data.color : '#000000'}
+          emissiveIntensity={isSelected ? 0.3 : 0}
+        />
       </mesh>
     </group>
   )
