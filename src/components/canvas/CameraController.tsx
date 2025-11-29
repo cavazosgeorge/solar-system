@@ -21,9 +21,10 @@ export function CameraController({ selectedPlanet, speedMultiplier, isLocked }: 
   useEffect(() => {
     if (!isLocked && controlsRef.current) {
       controlsRef.current.target.set(0, 0, 0)
+      camera.position.set(0, 30, 50)
       initialLockRef.current = true
     }
-  }, [isLocked])
+  }, [isLocked, camera])
 
   useFrame(() => {
     if (!controlsRef.current) return
