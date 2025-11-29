@@ -1,0 +1,66 @@
+import { Box, Text, VStack, Button, HStack } from '@chakra-ui/react'
+import type { PlanetData } from '../../data/planets'
+
+interface PlanetInfoProps {
+  planet: PlanetData
+  onClose: () => void
+}
+
+export function PlanetInfo({ planet, onClose }: PlanetInfoProps) {
+  return (
+    <Box
+      position="absolute"
+      bottom={4}
+      left="50%"
+      transform="translateX(-50%)"
+      bg="rgba(0, 0, 0, 0.85)"
+      p={5}
+      borderRadius="lg"
+      border="1px solid"
+      borderColor="whiteAlpha.300"
+      maxW="400px"
+      w="90%"
+    >
+      <VStack align="stretch" gap={3}>
+        <HStack justify="space-between">
+          <HStack gap={3}>
+            <Box
+              w={4}
+              h={4}
+              borderRadius="full"
+              bg={planet.color}
+              boxShadow={`0 0 10px ${planet.color}`}
+            />
+            <Text color="white" fontWeight="bold" fontSize="xl">
+              {planet.name}
+            </Text>
+          </HStack>
+          <Button size="sm" variant="ghost" onClick={onClose} color="white">
+            ✕
+          </Button>
+        </HStack>
+
+        <Text color="whiteAlpha.900">{planet.description}</Text>
+
+        <HStack gap={6} pt={2}>
+          <VStack gap={0} align="start">
+            <Text color="whiteAlpha.600" fontSize="xs">
+              Orbital Period
+            </Text>
+            <Text color="white" fontSize="sm">
+              {planet.orbitalPeriod} Earth years
+            </Text>
+          </VStack>
+          <VStack gap={0} align="start">
+            <Text color="whiteAlpha.600" fontSize="xs">
+              Distance from Sun
+            </Text>
+            <Text color="white" fontSize="sm">
+              {planet.distance} AU (scaled)
+            </Text>
+          </VStack>
+        </HStack>
+      </VStack>
+    </Box>
+  )
+}
