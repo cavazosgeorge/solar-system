@@ -12,6 +12,11 @@
   - Starfield background
   - Control panel for speed adjustment and orbit visibility
   - Planet info cards on click
+- Set up Docker deployment with Coolify on Hetzner VPS:
+  - Created multi-stage Dockerfile (bun build → nginx:alpine serve)
+  - Configured nginx.conf with SPA routing, health endpoint, asset caching
+  - Deployed to https://solar-system.cavazosgeorge.com
+- Fixed Docker healthcheck issue: changed `localhost` to `127.0.0.1` in healthcheck command (Alpine DNS resolution issue)
 
 ## Current State
 Fully functional 3D solar system visualization:
@@ -20,6 +25,7 @@ Fully functional 3D solar system visualization:
 - All 8 planets orbit the sun at accurate relative speeds
 - Click any planet to see its info
 - Controls panel allows speed adjustment (0.1x - 10x) and orbit toggle
+- Live at https://solar-system.cavazosgeorge.com (auto-deploys on push to main)
 
 ## Project Structure
 ```
@@ -54,3 +60,5 @@ Potential enhancements:
 - Package versions are pinned for compatibility - don't upgrade three/R3F without testing
 - Three.js must stay at 0.152.0 for @react-three/drei@9.88.17 compatibility
 - OrbitPath uses @react-three/drei's Line component (not native Three.js line)
+- Docker healthcheck must use `127.0.0.1` not `localhost` (Alpine DNS issue)
+- nginx.conf pid must be `/tmp/nginx.pid` not `/var/run/nginx.pid` (Alpine permissions)
