@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Stars } from '@react-three/drei'
-import { Box } from '@chakra-ui/react'
+import { Box, Text, Link } from '@chakra-ui/react'
+import { useDemoMode } from './hooks/useDemoMode'
 import { SolarSystem } from './components/canvas/SolarSystem'
 import { CameraController } from './components/canvas/CameraController'
 import { ControlPanel } from './components/controls/ControlPanel'
@@ -9,6 +10,7 @@ import { PlanetInfo } from './components/controls/PlanetInfo'
 import type { PlanetData } from './data/planets'
 
 function App() {
+  const isDemo = useDemoMode()
   const [speedMultiplier, setSpeedMultiplier] = useState(1)
   const [showOrbits, setShowOrbits] = useState(true)
   const [selectedPlanet, setSelectedPlanet] = useState<PlanetData | null>(null)
@@ -28,6 +30,26 @@ function App() {
 
   return (
     <Box className="dark" w="100vw" h="100vh" bg="black" position="relative">
+      {isDemo && (
+        <Box
+          bg="blue.600"
+          py={2}
+          px={4}
+          textAlign="center"
+          position="fixed"
+          top={0}
+          left={0}
+          right={0}
+          zIndex={1100}
+        >
+          <Text color="white" fontSize="sm" fontWeight="medium">
+            Demo Mode - Viewing Only{' '}
+            <Link href="https://solar-system.cavazosgeorge.com" color="white" textDecoration="underline">
+              Visit main site
+            </Link>
+          </Text>
+        </Box>
+      )}
       <Canvas camera={{ position: [0, 30, 50], fov: 60 }}>
         <ambientLight intensity={0.1} />
         <Stars radius={300} depth={60} count={5000} factor={7} fade speed={1} />
