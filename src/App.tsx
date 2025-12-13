@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Stars } from '@react-three/drei'
-import { Box, Text, Link } from '@chakra-ui/react'
+import { Box, Text } from '@chakra-ui/react'
 import { useDemoMode } from './hooks/useDemoMode'
 import { SolarSystem } from './components/canvas/SolarSystem'
 import { CameraController } from './components/canvas/CameraController'
@@ -43,10 +43,7 @@ function App() {
           zIndex={1100}
         >
           <Text color="white" fontSize="sm" fontWeight="medium">
-            Demo Mode - Viewing Only{' '}
-            <Link href="https://solar-system.cavazosgeorge.com" color="white" textDecoration="underline">
-              Visit main site
-            </Link>
+            Demo Mode - Viewing Only
           </Text>
         </Box>
       )}
@@ -70,6 +67,7 @@ function App() {
         onSpeedChange={setSpeedMultiplier}
         showOrbits={showOrbits}
         onToggleOrbits={() => setShowOrbits((prev) => !prev)}
+        isDemo={isDemo}
       />
       {selectedPlanet && (
         <PlanetInfo

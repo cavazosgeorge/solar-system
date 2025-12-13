@@ -5,6 +5,7 @@ interface ControlPanelProps {
   onSpeedChange: (speed: number) => void
   showOrbits: boolean
   onToggleOrbits: () => void
+  isDemo?: boolean
 }
 
 export function ControlPanel({
@@ -12,11 +13,12 @@ export function ControlPanel({
   onSpeedChange,
   showOrbits,
   onToggleOrbits,
+  isDemo = false,
 }: ControlPanelProps) {
   return (
     <Box
       position="absolute"
-      top={4}
+      top={isDemo ? 14 : 4}
       left={4}
       bg="rgba(0, 0, 0, 0.7)"
       p={4}
