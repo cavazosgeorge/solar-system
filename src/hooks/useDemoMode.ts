@@ -3,9 +3,10 @@ export function useDemoMode(): boolean {
   if (import.meta.env.VITE_DEMO_MODE === 'true') {
     return true;
   }
-  // Check hostname for demo subdomain
+  // Check hostname for demo subdomain (handles both demo. and www.demo.)
   if (typeof window !== 'undefined') {
-    return window.location.hostname.startsWith('demo.');
+    const hostname = window.location.hostname;
+    return hostname.startsWith('demo.') || hostname.startsWith('www.demo.');
   }
   return false;
 }
