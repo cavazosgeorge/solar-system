@@ -12,8 +12,16 @@ Demo mode in solar-system is purely informational since this is a client-only vi
 
 Demo mode is detected via two methods (either triggers demo mode):
 
-1. **Hostname Detection** - If the hostname starts with `demo.` (e.g., `demo.solar-system.cavazosgeorge.com`)
+1. **Hostname Detection** - If the hostname starts with `demo.` or `www.demo.` (e.g., `demo.solar-system.cavazos.app` or `www.demo.solar-system.cavazos.app`)
 2. **Environment Variable** - If `VITE_DEMO_MODE=true` is set
+
+### Important: www Prefix Handling
+
+When using `www.` subdomains, the hostname becomes `www.demo.example.com` not `demo.example.com`. The detection logic must check for BOTH patterns:
+
+```typescript
+hostname.startsWith('demo.') || hostname.startsWith('www.demo.')
+```
 
 ## Implementation Files
 
@@ -26,9 +34,10 @@ export function useDemoMode(): boolean {
   if (import.meta.env.VITE_DEMO_MODE === 'true') {
     return true;
   }
-  // Check hostname for demo subdomain
+  // Check hostname for demo subdomain (handles both demo. and www.demo.)
   if (typeof window !== 'undefined') {
-    return window.location.hostname.startsWith('demo.');
+    const hostname = window.location.hostname;
+    return hostname.startsWith('demo.') || hostname.startsWith('www.demo.');
   }
   return false;
 }
@@ -104,37 +113,42 @@ export function ControlPanel({ isDemo = false, ...props }: ControlPanelProps) {
 
 ### Step 1: Configure DNS
 
-Add a record for the demo subdomain pointing to the same server:
+Add records for the demo subdomain pointing to the same server:
 
 | Type | Name | Target |
 |------|------|--------|
 | A | solar-system | [your-server-ip] |
+| A | www.solar-system | [your-server-ip] |
 | A | demo.solar-system | [your-server-ip] |
+| A | www.demo.solar-system | [your-server-ip] |
 
 Or using CNAME:
 
 | Type | Name | Target |
 |------|------|--------|
-| CNAME | demo.solar-system | solar-system.cavazosgeorge.com |
+| CNAME | www.demo.solar-system | solar-system.cavazos.app |
 
 ### Step 2: Add Domain in Coolify
 
 1. Go to your application in Coolify dashboard
 2. Navigate to **Settings** → **Domains**
-3. Click **Add Domain**
-4. Enter: `demo.solar-system.cavazosgeorge.com`
-5. Save the configuration
+3. Add all domain variants:
+   - `solar-system.cavazos.app`
+   - `www.solar-system.cavazos.app`
+   - `demo.solar-system.cavazos.app`
+   - `www.demo.solar-system.cavazos.app`
+4. Save the configuration
 
 ### Step 3: SSL Certificate
 
-Coolify should automatically provision an SSL certificate via Let's Encrypt.
+Coolify should automatically provision SSL certificates via Let's Encrypt.
 
 ### Step 4: Verify
 
 After DNS propagation:
 
-- `https://solar-system.cavazosgeorge.com` → Normal mode
-- `https://demo.solar-system.cavazosgeorge.com` → Demo mode (with banner)
+- `https://www.solar-system.cavazos.app` → Normal mode
+- `https://www.demo.solar-system.cavazos.app` → Demo mode (with banner)
 
 ## Local Testing
 
@@ -151,5 +165,21 @@ For applications with a backend (like brain-board), demo mode also includes:
 - Auth bypass for read-only access
 - Hidden UI elements for write actions (upload, delete, edit buttons)
 - 403 error handling in API client
+- `TRUSTED_ORIGINS` environment variable for auth
 
 Solar-system only needs the client-side banner since it has no backend or write operations.
+
+---
+
+## Checklist for Client-Only Projects
+
+When implementing demo mode in a client-only project:
+
+- [ ] Create client-side `useDemoMode` hook (check both `demo.` AND `www.demo.`)
+- [ ] Add demo banner to main App component
+- [ ] Offset any absolute/fixed positioned elements near the top
+- [ ] Configure DNS for demo subdomain
+- [ ] Add demo subdomain in Coolify
+
+---
+*Last updated: 2025-12-13*
